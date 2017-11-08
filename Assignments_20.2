@@ -1,0 +1,3 @@
+val tweets = sc.textFile("hdfs:///user/cloudera/demonetization-tweets.csv").map(x => x.split(",")).filter(x=>x.length>=2).map(x => (x(0).replaceAll("\"",""),x(1).replaceAll("\"","").toLowerCase)).map(x => (x._1,x._2.split(" "))).toDF("id","words")
+tweets.registerTempTable("tweets")
+val explode = sqlContext.sql("select id as id,explode(words) as word from tweets").registerTempTable("tweet_word")
